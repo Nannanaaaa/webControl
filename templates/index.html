@@ -1,0 +1,178 @@
+{% extends "base.html" %}
+{% block title %}好困的网页远控{% endblock %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block content %}
+<script>
+    $(function () { $('.popover-hide').popover('hide');});
+    $(function () { $("[data-toggle='popover']").popover({html : true });});
+    $(function () { $('#submit').on('click', function () {
+        return confirm("请确认是否已在要被控制的电脑上打开了wcc.exe。没有请取消并去打开或下载")
+    })});
+    
+    $(document).ready(function () {
+        $('#mypopover').popover({
+            html : true,
+            title: function() {
+                      return $("#popover-head").html();
+                    },
+            content: function() {
+                return $("#popover-content").html();
+            }
+        });
+    });
+</script>
+<style type="text/css">
+    .popover{
+        max-width: 390px;
+    }
+</style>
+
+
+<div class="container" style="background-color:#FFFFFF;">
+    <div class="page-header">
+        <h1>网页远控</h1>
+        <!--<script type="text/javascript" src="http://ip.chinaz.com/getip.aspx"></script>-->
+    </div>
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div class="alert alert-success">
+                <button type="button" class="close" data-dismiss="alert">×</button>
+                <h4>成功</h4>
+            <ul class="flashes list-unstyled">
+            {% for message in messages %}
+              <li>{{ message }}</li>
+            {% endfor %}
+            </ul>
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    {% if errorinfo %}
+        <div class="alert alert-warning">
+            <button type="button" class="close" data-dismiss="alert">×</button>
+        <h4>
+          错误！
+        </h4>
+            <p>{{ errorinfo }}</p>
+
+      </div>
+
+    {% endif %}
+
+    {% if othererrorinfo %}
+        <div class="alert alert-warning">
+            <button type="button" class="close" data-dismiss="alert">×</button>
+        <h4>
+          错误！
+        </h4>
+            <p>{{ othererrorinfo }}</p>
+
+      </div>
+
+    {% endif %}
+
+    <form action="" method="post" name="submit">
+        {{ form.csrf_token }}
+        <div class="col-md-12">
+            <div class="col-md-12" id="command">
+                <span class="help-block"><strong>必填项！</strong>这个要写外网IP。百度“IP”,随便点开一个就能看到。如有问题，请在被控主机上打开此网页并
+                    <a href="https://www.baidu.com/s?tn=mswin_oem_dg&ie=utf-16&word=IP" target="_blank">点我查看</a>。注意是被控制的电脑的外网IP。如果内外网IP
+                    相同就填一样的就行。可以直接点击
+                    <button type="button" class="btn btn-warning" title="此IP是本机外网IP，如需控制本机，请直接复制"
+                        data-container="body" data-toggle="popover" data-placement="right" data-content="{{ ip }}">本机外网IP获取
+                    </button>
+                </span>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">被控主机外网IP地址：</h3>
+                    </div>
+                    <div class="panel-body">
+                        <p>
+                        {{ form.ip(class="col-md-12",style="border: 0", value="") }}
+                        </p>
+                    </div>
+                </div>
+
+                <span class="help-block"><strong>必填项！</strong>如果是通过路由器上的网，那么此路由器下的所有上网设备的外网IP是一样的。就无法区分。所以需要输入内网IP。
+                    内网IP的获取方法：win+R输入cmd打开命令台，输入ipconfig查看无线网适配器或者以太网适配器的IPv4地址。
+                    <!--<button type="button" class="btn btn-default" title="这样找IP" id="mypopoverLook"-->
+                        <!--data-container="body" data-toggle="popover" data-placement="right" data-html="true" >看我-->
+                    <!--</button>-->
+                    <!--<div id="popover-content" class="hide">-->
+                        <!--<form>werwrewte</form>-->
+                    <!--</div>-->
+                    <button id="mypopover" type="button" class="btn btn-default" data-container="body" data-placement="right" data-title="这里找IP" data-trigger="hover hover">
+                      看我
+                    </button>
+
+                    <div id="popover-head" class="hide">some title</div>
+                    <div id="popover-content" class="hide">
+                      <img alt="" src="{{ url_for('static', filename='img/ipyouxian.jpg')}}" >
+                        <img alt="" src="{{ url_for('static', filename='img/ipwuxian.jpg')}}" >
+                    </div>
+                    格式可能是这样192.168.1.XXX，也有可能跟上面的外网IP一样，
+                    不管什么样子，直接输入到下面就好。注意不要写错。如果有问题，请联系我
+                    <button type="button" class="btn btn-warning" title="内网IP格式示例，勿直接复制"
+                        data-container="body" data-toggle="popover" data-placement="right" data-content="192.168.1.XXX">内网IP示例
+                    </button>
+
+                </span>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">被控主机内网IP地址：</h3>
+                    </div>
+                    <div class="panel-body">
+                        <p>
+                        {{ form.iplan(class="col-md-12",style="border: 0", value="") }}
+                        </p>
+                    </div>
+                </div>
+                <span class="help-block">目前已经在config.ini（在<a href="http://178.62.198.117:88/webControl v1.0.zip" data-toggle="tooltip" data-placement="top" title="<h2>点我下载</h2>"><strong>webControlClient.zip</strong></a>中）
+                    中配置过的内置命令有:notepad->打开记事本，shutdown—>10后关机，dir->查看文档目录结构，
+                    music->打开指定目录音乐文件，不同电脑的路径不一样，需要自己在config.ini中修改路径。切记中和文件名不能包含中文。movie->打开指定目录的电影，注意同music。... 有其他的需求也可以再配，具体请看<a href="/help" target="_blank">帮助</a>。这个和【直接写代码】两项至少得填写
+                    一个
+                    <button type="button" class="btn btn-warning" title="测试关机命令请直接复制"
+                        data-container="body" data-toggle="popover" data-placement="right" data-content="shuntdown">示例命令
+                    </button>
+                </span>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">内置命令：</h3>
+                    </div>
+                    <div class="panel-body">
+                        <p>
+                        {{ form.commandInConfig(class="col-md-12",style="border: 0", value="") }}
+                        </p>
+                    </div>
+
+                </div>
+                <span class="help-block">就是直接写python代码，要严格按照python代码格式写比如缩进和换行。常用的包我都打包到webControlClient这里了，比如win32包来控制电脑。这个和【内置命令】两项至少
+                    得填写一个。例如：
+                    <button type="button" class="btn btn-warning" title="测试请直接复制"
+                        data-container="body" data-toggle="popover" data-placement="right" data-content="import win32api<br>win32api.MessageBox(0,'hello,my friend,please listen','',0,1)<br>win32api.Beep(300,3000)">示例代码
+                    </button>
+                </span>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">直接写代码[代码中请不要出现中文或者中文字符]：</h3>
+                    </div>
+                    <div class="panel-body">
+                        <p>
+                        {{ form.commandInWrite(class="col-md-12",style="border: 0; height: 200px", value="")|safe }}
+                        </p>
+                    </div>
+                </div>
+
+                <div class="col-md-12 text-center">
+                    {{ form.sendCommand(class="btn btn-primary", type="submit",id="submit",onsubmit="confirm_open()") }}
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    {{ form.clearCommand(class="btn btn-primary", type="reset") }}
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+{% endblock %}

@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+{% block title %}好困的网页远控{% endblock %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block content %}
+<div class="container" style="background-color:#FFFFFF;">
+    <div class="col-md-12">
+        <div class="page-header">
+            <h1>
+                网页远控程序介绍<small> —— by 我是好困</small>
+            </h1>
+        </div>
+        <div class="panel-group" id="panel-921277">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						 <a class="panel-title" data-toggle="collapse" data-parent="#panel-921277" href="#panel-element-69915">webControlClient客户端服务器下载地址</a>
+					</div>
+					<div id="panel-element-69915" class="panel-collapse collapse">
+						<div class="panel-body">
+							服务器端下载地址：<a href="http://178.62.198.117:88/webControl v1.0.zip">点我点我</a>
+                            因为是买得的国外的服务器，下载速度10k/s左右吧。不过压缩包不大7.2M左右。
+						</div>
+					</div>
+				</div>
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						 <a class="panel-title" data-toggle="collapse" data-parent="#panel-921277" href="#panel-element-745990">webControlClient客户端百度云盘地址</a>
+					</div>
+					<div id="panel-element-745990" class="panel-collapse collapse">
+						<div class="panel-body">
+							分享到百度云盘应该稍微快点。<a href="http://pan.baidu.com/s/1mi52rNU" target="_blank"> 点我点我</a>
+                            密码：fa36
+                            这个要还慢的话，请直接联系我吧。我是好困。
+						</div>
+					</div>
+				</div>
+			</div>
+
+        <dl>
+				<dt>
+					BEFORE...
+				</dt>
+				<dd>
+					突然发现写文档也是一件比较痛苦的事情，谁让我写的作文从小差到大。还好这个功能比较简单，我应该能说明白。嘻嘻。
+				</dd>
+				<dt>
+					THEN...
+				</dt>
+				<dd>
+					本来是自己看到的一篇教程。原想在自己本地上练习练习就ok了，因为功能的原因，如果只在本地跑，没啥意义。
+                    于是乎就准备买了个云主机，在那上面部署。好在网上的教程挺多的。百度不行就google。
+				</dd>
+
+				<dt>
+					AFTER...
+				</dt>
+				<dd>
+					上！
+				</dd>
+                <dt>
+                    ABOUT:
+                </dt>
+				<dd>
+					语言的话都用的是python，因为本身就是为了学习python的web框架。
+                    网站用的web框架是flask，bootstracp，服务器端 uwgsi +Nginx，数据库用的MongoDB。源码我会放在github上，有兴趣的话可以看看。
+				</dd>
+				<dt>
+					FUNCTION:
+				</dt>
+                <div class="text-center col-md-12">
+                    <img alt="" src="{{ url_for('static', filename='img/liucheng.jpg')}}" class="img-responsive">
+                </div>
+				<dd>
+					功能的话我觉得完全可以写成一个远程控制，理论上是能直接控制电脑的，只是自己的水平还不够，学习的道路还很漫长。被控主机的
+                    IP就是在电脑上的cmd中ipconfig里的地址，但是只用这个区分每台电脑有些问题。如果是通过路由器连接的网路，IP地址会是
+                    192.168.1.1XX这样的东西。就意味着可能重复（因为是一个数据库，所以如果你跟别人的IP地址相同，别人的电脑也恰好点开这个
+                    <a href="http://178.62.198.117:88/webControl v1.0.zip" data-toggle="tooltip" data-placement="top" title="<h2>点我下载</h2>"><strong>webControlClient</strong></a>
+                    里面的wcc.exe，就有能把别人的电脑误操作了），而且这个重复的可能性蛮大的。所以我就想着把外网ip和内
+                    网IP都作为判断条件的话，并给出获取方法。这样就能唯一确定一台电脑了，也就不会存在误操作的情况了。
+				</dd>
+                <dt>
+                    FUNCTION——内置命令：
+                </dt>
+                <dd>
+                    内置命令这一栏，可以直接使用config.ini中配置好的命令。如果对python的win32API和windows的cmd命令有了解的
+                    话，这个完全可以在config.ini中自己加，有需要的话我也可以帮忙加。
+                </dd>
+                <dt>
+                    FUNCTION——直接写代码：
+                </dt>
+                <dd>
+                    另外，如果会写python代码，在直接写代码这一栏，按照格式写好，也是能直接在被控主机上自动运行的。
+                </dd>
+                <dt>
+                    OTHERS...
+                </dt>
+                <dd>
+                    网页端说完了，再说下被控的电脑端装的
+                    <a href="http://178.62.198.117:88/webControl v1.0.zip" data-toggle="tooltip" data-placement="top" title="<h2>点我下载</h2>"><strong>webControlClient</strong></a>
+                    吧。这个并不需要安装，其实就是用python写的自动查询数据库并执行的一个脚本，用py2exe打包了，之所以这么做，就是为了能够在没有装
+                    python运行环境的电脑中直接运行。用的话，直接双击击wcc.exe运行就好。其实就是用它查到你网页端提交到数据库的命令，并在本地
+                    执行。就是这样。查询方式是每过10s查询一次。这个时间可以在config.ini中的timelimit中修改。所以说只要在离开被控电脑主
+                    机之前点开wcc.exe（退出的话直接点关闭就自动退出了）就能远程控制电脑了。
+                </dd>
+			</dl>
+        <br>
+        <br>
+            <blockquote class="pull-right">
+                <img alt="" src="{{ url_for('static', filename='img/langlanglang.gif')}}">
+				<p>
+					我们可以划船不用桨，扬帆没有风，因为我们这一生全靠浪
+				</p> <small>Someone famous <cite>&nbsp;&nbsp;Somebody</cite></small>
+			</blockquote>
+    </div>
+</div>
+<!--<script>-->
+   <!--$(function () { $("[data-toggle='tooltip']").tooltip({html : true }); });-->
+   <!--$(function () { $("[data-toggle='tooltip']").tooltip(); });-->
+<!--</script>-->
+{% endblock %}
