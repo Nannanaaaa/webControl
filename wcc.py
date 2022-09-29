@@ -75,4 +75,7 @@ class WCC(object):
 
 
 if __name__ == '__main__':
+# 1    
+# 2
+# 3
     mcc = WCC()
